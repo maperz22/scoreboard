@@ -48,6 +48,14 @@ public class ScoreboardServiceImplTest {
     }
 
     @Test
+    void shouldThorwExceptionWhenOneTeamIsAlreadyPlaying() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.startMatch("Mexico", "USA");
+        });
+    }
+
+    @Test
     void shouldThrowExceptionWhenTeamNameIsNull() {
         assertThrows(NullPointerException.class, () -> {
             scoreboardService.startMatch(null, "Canada");
@@ -212,6 +220,24 @@ public class ScoreboardServiceImplTest {
             scoreboardService.finishMatch("Mexico", "Canada");
             scoreboardService.updateScore("Mexico", "Canada", 1, 0);
         });
+    }
+
+    @Test
+    void shouldGetSummary() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        scoreboardService.updateScore("Mexico", "Canada", 4, 3);
+        scoreboardService.startMatch("USA", "France");
+        scoreboardService.updateScore("USA", "France", 2, 3);
+        scoreboardService.startMatch("Spain", "Germany");
+        scoreboardService.updateScore("Spain", "Germany", 2, 3);
+        scoreboardService.startMatch("Denmark", "Sweden");
+        scoreboardService.updateScore("Denmark", "Sweden", 2, 3);
+        List<Match> summary = scoreboardService.getSummary();
+        assertEquals(4, summary.size());
+        assertEquals("Mexico", summary.get(0).getHomeTeam().getName());
+        assertEquals("USA", summary.get(1).getHomeTeam().getName());
+        assertEquals("Spain", summary.get(2).getHomeTeam().getName());
+        assertEquals("Denmark", summary.get(3).getHomeTeam().getName());
     }
 
 }

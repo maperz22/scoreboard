@@ -10,4 +10,6 @@ public interface ScoreboardService {
     void updateScore(final String homeTeamName, final String awayTeamName, final int homeScore, final int awayScore);
     void finishMatch(final String homeTeamName, final String awayTeamName);
     List<Match> getMatches();
+
+    List<Match> getSummary();
 }

@@ -4,6 +4,7 @@ import org.maperz.scoreboard.domain.model.Match;
 import org.maperz.scoreboard.domain.model.Team;
 import org.maperz.scoreboard.domain.repository.MatchRepository;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ScoreboardServiceImpl implements ScoreboardService{
@@ -47,6 +48,13 @@ public class ScoreboardServiceImpl implements ScoreboardService{
         return matchRepository.findAll();
     }
 
+    @Override
+    public List<Match> getSummary() {
+        return matchRepository.findAll().stream()
+                .sorted(Comparator.comparing(Match::getTotalScore).reversed().thenComparing(Match::getStartTime))
+                .toList();
+    }
+
     private void validateTeams(final String homeTeamName, final String awayTeamName) {
         if (homeTeamName == null || awayTeamName == null) {
             throw new NullPointerException("Team names must not be null");
@@ -57,13 +65,11 @@ public class ScoreboardServiceImpl implements ScoreboardService{
         if (homeTeamName.equalsIgnoreCase(awayTeamName)) {
             throw new IllegalArgumentException("Home team and away team must be different");
         }
-        matchRepository.findByTeams(new Team(homeTeamName), new Team(awayTeamName))
+        matchRepository.findAll().stream()
+                .filter(match -> match.getHomeTeam().getName().equalsIgnoreCase(homeTeamName) || match.getAwayTeam().getName().equalsIgnoreCase(homeTeamName))
+                .findAny()
                 .ifPresent(match -> {
-                    throw new IllegalArgumentException("Match already exists");
-                });
-        matchRepository.findByTeams(new Team(awayTeamName), new Team(homeTeamName))
-                .ifPresent(match -> {
-                    throw new IllegalArgumentException("Match already exists");
+                    throw new IllegalArgumentException("Team already has a match");
                 });
     }
 

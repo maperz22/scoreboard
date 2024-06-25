@@ -14,24 +14,23 @@ public class Match {
         this.startTime = LocalDateTime.now();
         this.score = new Score(0, 0);
     }
-
     public void setScore(final int homeScore, final int awayScore) {
         this.score = new Score(homeScore, awayScore);
     }
-
     public Team getHomeTeam() {
         return homeTeam;
     }
-
     public Team getAwayTeam() {
         return awayTeam;
     }
-
     public Score getScore() {
         return score;
     }
-
     public LocalDateTime getStartTime() {
         return startTime;
+    }
+
+    public int getTotalScore() {
+        return score.getHomeScore() + score.getAwayScore();
     }
 }
