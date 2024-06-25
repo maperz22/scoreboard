@@ -15,7 +15,13 @@ public class InMemoryMatchRepository implements MatchRepository {
 
     @Override
     public void save(final Match match) {
-        matches.add(match);
+        matches.stream().filter(m -> m.equals(match)).findFirst().ifPresentOrElse(
+                m -> {
+                    matches.remove(m);
+                    matches.add(match);
+                },
+                () -> matches.add(match)
+        );
     }
 
     @Override
