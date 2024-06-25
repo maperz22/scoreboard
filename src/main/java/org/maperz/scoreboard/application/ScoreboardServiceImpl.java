@@ -33,13 +33,13 @@ public class ScoreboardServiceImpl implements ScoreboardService{
         matchRepository.save(match);
     }
 
-    private void validateScore(final Match match, final int homeScore, final int awayScore) {
-        if (homeScore < 0 || awayScore < 0) {
-            throw new IllegalArgumentException("Score must not be negative");
-        }
-        if (match.getScore().getHomeScore() == homeScore && match.getScore().getAwayScore() == awayScore) {
-            throw new IllegalArgumentException("Score must be different");
-        }
+    @Override
+    public void finishMatch(final String homeTeamName, final String awayTeamName) {
+        final Team homeTeam = new Team(homeTeamName);
+        final Team awayTeam = new Team(awayTeamName);
+        final Match match = matchRepository.findByTeams(homeTeam, awayTeam)
+                .orElseThrow(() -> new IllegalArgumentException("Match not found"));
+        matchRepository.delete(match);
     }
 
     @Override
@@ -65,6 +65,15 @@ public class ScoreboardServiceImpl implements ScoreboardService{
                 .ifPresent(match -> {
                     throw new IllegalArgumentException("Match already exists");
                 });
+    }
+
+    private void validateScore(final Match match, final int homeScore, final int awayScore) {
+        if (homeScore < 0 || awayScore < 0) {
+            throw new IllegalArgumentException("Score must not be negative");
+        }
+        if (match.getScore().getHomeScore() == homeScore && match.getScore().getAwayScore() == awayScore) {
+            throw new IllegalArgumentException("Score must be different");
+        }
     }
 
 }

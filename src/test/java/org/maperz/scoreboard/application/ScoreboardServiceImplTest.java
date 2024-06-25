@@ -131,5 +131,87 @@ public class ScoreboardServiceImplTest {
         });
     }
 
+    @Test
+    void shouldThrowExceptionWhenScoreIsNegative() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.updateScore("Mexico", "Canada", -1, 0);
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenScoreIsNegative2() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.updateScore("Mexico", "Canada", 0, -1);
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenScoreIsNegative3() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.updateScore("Mexico", "Canada", -1, -1);
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenScoreIsNegative4() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.updateScore("Mexico", "Canada", 0, 0);
+        });
+    }
+
+    @Test
+    void shouldFinishMatch() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        scoreboardService.finishMatch("Mexico", "Canada");
+        List<Match> matches = scoreboardService.getMatches();
+        assertEquals(0, matches.size());
+    }
+
+    @Test
+    void shouldFinishMatch2() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        scoreboardService.updateScore("Mexico", "Canada", 1, 0);
+        scoreboardService.finishMatch("Mexico", "Canada");
+        List<Match> matches = scoreboardService.getMatches();
+        assertEquals(0, matches.size());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMatchDoesNotExist4() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.finishMatch("Mexico", "Canada");
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMatchDoesNotExist5() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.finishMatch("Mexico", "Canada");
+            scoreboardService.finishMatch("Mexico", "Canada");
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMatchDoesNotExist6() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.finishMatch("Mexico", "Canada");
+            scoreboardService.finishMatch("Canada", "Mexico");
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMatchDoesNotExist7() {
+        scoreboardService.startMatch("Mexico", "Canada");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreboardService.finishMatch("Mexico", "Canada");
+            scoreboardService.updateScore("Mexico", "Canada", 1, 0);
+        });
+    }
 
 }

@@ -8,5 +8,6 @@ public interface ScoreboardService {
 
     void startMatch(final String homeTeamName, final String awayTeamName);
     void updateScore(final String homeTeamName, final String awayTeamName, final int homeScore, final int awayScore);
+    void finishMatch(final String homeTeamName, final String awayTeamName);
     List<Match> getMatches();
 }
