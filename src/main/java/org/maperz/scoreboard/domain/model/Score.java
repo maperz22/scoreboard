@@ -1,21 +1,16 @@
 package org.maperz.scoreboard.domain.model;
 
-public class Score {
-    private final int homeScore;
-    private final int awayScore;
+/**
+ * Represents a score in a game.
+ */
+public record Score(int homeScore, int awayScore) {
 
-    public Score(final int homeScore, final int awayScore) {
-        this.homeScore = homeScore;
-        this.awayScore = awayScore;
+    /**
+     * @return The total score of the game.
+     * @implNote The total score is the sum of the home and away scores.
+     */
+    public int getTotalScore() {
+        return this.homeScore + this.awayScore;
     }
-
-    public int getHomeScore() {
-        return homeScore;
-    }
-
-    public int getAwayScore() {
-        return awayScore;
-    }
-
 
 }
